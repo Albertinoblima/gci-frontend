@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR"> <!-- 1. Definir o idioma -->
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- 2. Seus Favicons e Ícones -->
+  <link rel="icon" href="/Logo-sem-fundo.ico" /> <!-- Arquivo deve estar em gci-frontend/public/ -->
+  <link rel="apple-touch-icon" href="/Logo-sem-fundo-192.png" /> <!-- Arquivo deve estar em gci-frontend/public/ -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 3. Theme Color (Progressive Enhancement - Chrome, Safari, Edge) -->
+  <!-- Ignored by Firefox but enhances mobile experience on supported browsers -->
+  <meta name="theme-color" content="#0284c7" />
+  <meta name="msapplication-navbutton-color" content="#0284c7" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- 4. Descrição -->
+  <meta name="description"
+    content="Painel Administrativo do Sistema de Gestão de Cidades Inteligentes (GCI) para otimizar a comunicação e serviços municipais." />
+
+  <!-- 5. Manifest para PWA -->
+  <link rel="manifest" href="/manifest.json" /> <!-- Arquivo deve estar em gci-frontend/public/ -->
+
+  <!-- 6. Fontes (Ex: Inter do Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- 7. Título da Página -->
+  <title>Painel GCI - Gestão de Cidades Inteligentes</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- 8. Noscript Tag (Opcional) -->
+  <noscript>Você precisa habilitar o JavaScript para utilizar o Painel GCI.</noscript>
+</body>
+
+</html>
