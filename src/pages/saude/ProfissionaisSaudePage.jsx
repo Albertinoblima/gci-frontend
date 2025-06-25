@@ -3,6 +3,8 @@ import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import profissionalSaudeService from '@/services/saude/profissionalSaudeService';
 import { useAuth } from '@/hooks/useAuth';
+import municipioService from '@/services/municipioService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNotifier } from '@/contexts/NotificationContext';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -28,12 +30,31 @@ export default function ProfissionaisSaudePage() {
     const isUserAdminSistema = user?.role === 'admin_sistema';
     const defaultMunicipioId = !isUserAdminSistema ? user?.municipio_id : null;
 
-    const queryKey = useMemo(() => ['profissionaisSaude', user?.role, user?.municipio_id], [user]);
+    const [municipioSelecionadoId, setMunicipioSelecionadoId] = useState(defaultMunicipioId);
+
+    // Carregar municípios para admin_sistema
+    const { data: municipios } = useQuery({
+        queryKey: ['municipios'],
+        queryFn: async () => {
+            const response = await municipioService.getAll();
+            return response.data?.data?.municipios || [];
+        },
+        enabled: isUserAdminSistema,
+    });
+
+    const queryKey = useMemo(() => ['profissionaisSaude', user?.role, municipioSelecionadoId], [user, municipioSelecionadoId]);
 
     const { data: profissionais, isLoading, isError, error, refetch } = useQuery({
         queryKey,
-        queryFn: () => profissionalSaudeService.getAll().then(res => res.data?.data?.profissionais || []),
-        enabled: !!user && (isUserAdminSistema || !!user?.municipio_id),
+        queryFn: () => {
+            let params = {};
+            if (isUserAdminSistema) {
+                // Para admin_sistema, exige município selecionado
+                params.municipio_id = municipioSelecionadoId;
+            }
+            return profissionalSaudeService.getAll(params).then(res => res.data?.data?.profissionais || []);
+        },
+        enabled: !!user && (isUserAdminSistema ? !!municipioSelecionadoId : !!user?.municipio_id),
     });
 
     const mutation = useMutation({
@@ -63,6 +84,37 @@ export default function ProfissionaisSaudePage() {
     // Verificação de segurança para usuário não autenticado
     if (!user) {
         return <div className="p-8 text-center">Carregando dados do usuário...</div>;
+    }
+
+    // Se admin_sistema e não selecionou município, força seleção
+    if (isUserAdminSistema && !municipioSelecionadoId) {
+        return (
+            <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                        <User className="w-8 h-8" />
+                        <h1 className="text-2xl font-bold">Profissionais de Saúde</h1>
+                    </div>
+                </div>
+                <div className="p-8 text-center space-y-4">
+                    <p>Como Administrador do Sistema, selecione um município para gerenciar os profissionais.</p>
+                    <div className="max-w-md mx-auto">
+                        <Select value={municipioSelecionadoId?.toString() || ''} onValueChange={value => setMunicipioSelecionadoId(Number(value))}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Escolha um município..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {municipios?.map((municipio) => (
+                                    <SelectItem key={municipio.id} value={municipio.id.toString()}>
+                                        {municipio.nome}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (

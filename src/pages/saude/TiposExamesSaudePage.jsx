@@ -42,7 +42,7 @@ export default function TiposExamesSaudePage() {
             let targetMunicipioId = selectedMunicipioId;
             if (!isUserAdminSistema && user?.municipio_id) targetMunicipioId = String(user.municipio_id);
 
-            if (targetMunicipioId) params.municipioId = targetMunicipioId;
+            if (targetMunicipioId) params.municipio_id = targetMunicipioId;
             else if (isUserAdminSistema && !targetMunicipioId) { /* Admin sem filtro, pode listar todos ou exigir filtro */ }
             else { setTiposExames([]); setIsLoading(false); return; } // Sem município, sem busca
 

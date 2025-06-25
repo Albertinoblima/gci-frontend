@@ -34,6 +34,14 @@ export default function TriagensPage() {
     const [municipiosFiltro, setMunicipiosFiltro] = useState([]);
     const [unidadesFiltro, setUnidadesFiltro] = useState([]);
 
+    // Função para montar params padronizado
+    const getParamsWithMunicipioId = () => {
+        let params = { ...filtros };
+        if (isUserAdminSistema) params.municipio_id = filtros.municipioId;
+        else params.municipio_id = user?.municipio_id;
+        return params;
+    };
+
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [editingTriagem, setEditingTriagem] = useState(null);
     // Detalhes da triagem podem ser exibidos em um modal ou uma página separada

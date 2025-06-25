@@ -2,31 +2,63 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
+import municipioService from '@/services/municipioService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import profissionalSaudeService from '@/services/saude/profissionalSaudeService';
 import horarioDisponivelSaudeService from '@/services/saude/horarioDisponivelSaudeService';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { Calendar, Clock, PlusCircle } from 'lucide-react';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import HorarioDisponivelForm from './horarios/HorarioDisponivelForm';
+
 
 export default function HorariosPage() {
     const { user } = useAuth();
     const [selectedProfissionalId, setSelectedProfissionalId] = useState('');
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const isUserAdminSistema = user?.role === 'admin_sistema';
+    const [municipioSelecionadoId, setMunicipioSelecionadoId] = useState(null);
+
+    // Carregar municípios para admin_sistema
+    const { data: municipios } = useQuery({
+        queryKey: ['municipios'],
+        queryFn: async () => {
+            const response = await municipioService.getAll();
+            return response.data?.data?.municipios || [];
+        },
+        enabled: isUserAdminSistema,
+    });
 
     // Busca a lista de profissionais para o select
     const { data: profissionais, isLoading: isLoadingProfissionais } = useQuery({
-        queryKey: ['profissionaisSaude'],
-        queryFn: () => profissionalSaudeService.getAll().then(res => res.data?.data?.profissionais || []),
+        queryKey: ['profissionaisSaude', isUserAdminSistema ? municipioSelecionadoId : user?.municipio_id],
+        queryFn: () => {
+            let params = {};
+            if (isUserAdminSistema && municipioSelecionadoId) {
+                params.municipio_id = municipioSelecionadoId;
+            } else if (!isUserAdminSistema && user?.municipio_id) {
+                params.municipio_id = user.municipio_id;
+            }
+            return profissionalSaudeService.getAll(params).then(res => res.data?.data?.profissionais || []);
+        },
+        enabled: isUserAdminSistema ? !!municipioSelecionadoId : !!user?.municipio_id,
     });
 
     // Busca os horários do profissional selecionado
     const { data: horarios, isLoading: isLoadingHorarios, refetch: refetchHorarios } = useQuery({
-        queryKey: ['horariosDisponiveis', selectedProfissionalId],
-        queryFn: () => horarioDisponivelSaudeService.getAll({ profissionalId: selectedProfissionalId }).then(res => res.data?.data?.horarios || []),
-        enabled: !!selectedProfissionalId,
+        queryKey: ['horariosDisponiveis', selectedProfissionalId, isUserAdminSistema ? municipioSelecionadoId : user?.municipio_id],
+        queryFn: () => {
+            let params = { profissionalId: selectedProfissionalId };
+            if (isUserAdminSistema && municipioSelecionadoId) {
+                params.municipio_id = municipioSelecionadoId;
+            } else if (!isUserAdminSistema && user?.municipio_id) {
+                params.municipio_id = user.municipio_id;
+            }
+            return horarioDisponivelSaudeService.getAll(params).then(res => res.data?.data?.horarios || []);
+        },
+        enabled: !!selectedProfissionalId && (isUserAdminSistema ? !!municipioSelecionadoId : !!user?.municipio_id),
     });
 
     const handleOpenForm = () => {
@@ -45,6 +77,35 @@ export default function HorariosPage() {
     // Verificação de segurança para usuário não autenticado
     if (!user) {
         return <div className="p-8 text-center">Carregando dados do usuário...</div>;
+    }
+
+    // Se admin_sistema e não selecionou município, força seleção
+    if (isUserAdminSistema && !municipioSelecionadoId) {
+        return (
+            <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                    <Calendar className="w-8 h-8" />
+                    <h1 className="text-2xl font-bold">Gerenciamento de Agendas</h1>
+                </div>
+                <div className="p-8 text-center space-y-4">
+                    <p>Como Administrador do Sistema, selecione um município para gerenciar as agendas.</p>
+                    <div className="max-w-md mx-auto">
+                        <Select value={municipioSelecionadoId?.toString() || ''} onValueChange={value => setMunicipioSelecionadoId(Number(value))}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Escolha um município..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {municipios?.map((municipio) => (
+                                    <SelectItem key={municipio.id} value={municipio.id.toString()}>
+                                        {municipio.nome}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (
