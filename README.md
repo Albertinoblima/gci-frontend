@@ -1,12 +1,58 @@
-# React + Vite
+# GCI Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend oficial do sistema GCI (React + Vite).
 
-Currently, two official plugins are available:
+Este projeto se conecta ao backend Node/Express via API REST e Socket.IO.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Arquitetura de Publicacao
 
-## Expanding the ESLint configuration
+- Frontend: `app.idialog.com.br`
+- Backend: `api.idialog.com.br`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Stack recomendada para menor custo:
+
+- Frontend estatico no GitHub Pages
+- Backend no Railway
+- Banco existente mantido (sem recriar) se for acessivel externamente
+
+## Requisitos
+
+- Node.js 18+
+- npm 9+
+
+## Variaveis de Ambiente
+
+Crie um arquivo `.env` para desenvolvimento local:
+
+```env
+VITE_API_BASE_URL=http://localhost:3001/api
+VITE_BACKEND_URL=http://localhost:3001
+```
+
+Em producao, use:
+
+```env
+VITE_API_BASE_URL=https://api.idialog.com.br/api
+VITE_BACKEND_URL=https://api.idialog.com.br
+```
+
+## Scripts
+
+- `npm run dev`: inicia o frontend em desenvolvimento
+- `npm run build`: gera build de producao
+- `npm run preview`: testa localmente a build
+- `npm run lint`: executa ESLint
+
+## Fluxo de Deploy Recomendado
+
+1. Ajustar env de producao no provedor de hospedagem
+2. Executar build (`npm run build`)
+3. Publicar conteudo estatico
+4. Validar login, navegacao SPA e conexao com API
+5. Validar conexao Socket.IO em producao
+
+## Pontos de Atencao
+
+1. Evitar valores hardcoded de `localhost` no codigo de producao
+2. Garantir CORS liberado apenas para `app.idialog.com.br` no backend
+3. Manter segredos fora do repositorio

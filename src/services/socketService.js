@@ -7,6 +7,8 @@
 import io from 'socket.io-client';
 import { getSecureToken } from '../utils/auth.js';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
 class SocketService {
     constructor() {
         this.socket = null;
@@ -54,7 +56,7 @@ class SocketService {
                     }
                 };
 
-                this.socket = io('http://localhost:3001', socketOptions);
+                this.socket = io(BACKEND_URL, socketOptions);
 
                 // Event listeners
                 this.socket.on('connect', () => {
@@ -126,7 +128,7 @@ class SocketService {
             const token = getSecureToken();
 
             // Tentar com polling apenas
-            this.socket = io('http://localhost:3001', {
+            this.socket = io(BACKEND_URL, {
                 transports: ['polling'], // Apenas polling
                 timeout: 15000, // Mais tempo para polling
                 reconnection: false,
