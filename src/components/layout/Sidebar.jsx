@@ -10,7 +10,7 @@ import {
     LayoutDashboard, MessageSquare, Building, Users,
     HeartPulse, School, ClipboardList, Stethoscope, Hospital,
     User, Calendar, UserCircle,
-    Settings,
+    Settings, PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react';
 
 // ─── NavItem ────────────────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ const NavGroupLabel = ({ children, collapsed }) => {
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 export default function Sidebar({ onLinkClick, forceExpanded = false }) {
     const { user } = useAuth();
-    const { collapsed } = useSidebar();
+    const { collapsed, toggle } = useSidebar();
 
     const isExpanded = forceExpanded || !collapsed;
 
@@ -89,6 +89,32 @@ export default function Sidebar({ onLinkClick, forceExpanded = false }) {
                     isExpanded ? 'w-64' : 'w-[60px]'
                 )}
             >
+                {/* ── Toggle ── */}
+                {!forceExpanded && (
+                    <div className={cn(
+                        'flex shrink-0 items-center border-b border-slate-200 dark:border-slate-800 h-[60px]',
+                        isExpanded ? 'justify-end px-3' : 'justify-center'
+                    )}>
+                        <Tooltip delayDuration={300}>
+                            <TooltipTrigger asChild>
+                                <button
+                                    onClick={toggle}
+                                    className="rounded-lg p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors duration-150"
+                                    aria-label={isExpanded ? 'Recolher menu' : 'Expandir menu'}
+                                >
+                                    {isExpanded
+                                        ? <PanelLeftClose className="h-5 w-5" />
+                                        : <PanelLeftOpen className="h-5 w-5" />
+                                    }
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                                {isExpanded ? 'Recolher menu' : 'Expandir menu'}
+                            </TooltipContent>
+                        </Tooltip>
+                    </div>
+                )}
+
                 {/* ── Nav ── */}
                 <div className={cn(
                     'flex-1 overflow-y-auto overflow-x-hidden py-3',

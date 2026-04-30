@@ -2,14 +2,13 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useSidebar } from '@/contexts/SidebarContext';
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
     DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { CircleUser, Menu, LogOut, Settings, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { CircleUser, Menu, LogOut, Settings } from 'lucide-react';
 import Sidebar from './Sidebar';
 import gciLogo from '@/assets/logo-gci-completo.png';
 
@@ -18,22 +17,11 @@ const formatRole = (role = '') =>
 
 export default function Header() {
     const { user, logout } = useAuth();
-    const { collapsed, toggle } = useSidebar();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
     return (
         <header className="flex h-[60px] shrink-0 items-center gap-3 border-b bg-white px-4 lg:px-6 dark:bg-slate-950 dark:border-slate-800 sticky top-0 z-30 shadow-sm">
 
-            {/* ── Toggle sidebar — apenas desktop ── */}
-            <button
-                onClick={toggle}
-                className="hidden md:flex items-center justify-center rounded-lg p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors duration-150"
-                aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
-            >
-                {collapsed
-                    ? <PanelLeftOpen className="h-5 w-5" />
-                    : <PanelLeftClose className="h-5 w-5" />}
-            </button>
 
             {/* ── Logo + nome — visível sempre ── */}
             <NavLink to="/dashboard" className="flex items-center gap-2.5">
@@ -42,9 +30,6 @@ export default function Header() {
                     Sistema GCI
                 </span>
             </NavLink>
-
-            {/* ── Separador vertical ── */}
-            <div className="hidden md:block h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
 
             {/* ── Espaço central ── */}
             <div className="flex-1" />
