@@ -5,12 +5,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
-import gciLogo from '@/assets/logo-gci-completo.png';
 
 import {
     LayoutDashboard, MessageSquare, Building, Users,
     HeartPulse, School, ClipboardList, Stethoscope, Hospital,
-    User, Calendar, UserCircle, PanelLeftClose, PanelLeftOpen,
+    User, Calendar, UserCircle,
     Settings,
 } from 'lucide-react';
 
@@ -69,7 +68,7 @@ const NavGroupLabel = ({ children, collapsed }) => {
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 export default function Sidebar({ onLinkClick, forceExpanded = false }) {
     const { user } = useAuth();
-    const { collapsed, toggle } = useSidebar();
+    const { collapsed } = useSidebar();
 
     const isExpanded = forceExpanded || !collapsed;
 
@@ -90,34 +89,6 @@ export default function Sidebar({ onLinkClick, forceExpanded = false }) {
                     isExpanded ? 'w-64' : 'w-[60px]'
                 )}
             >
-                {/* ── Header ── */}
-                <div className={cn(
-                    'flex items-center border-b border-slate-200 dark:border-slate-800 h-[60px] shrink-0',
-                    isExpanded ? 'px-4 justify-between' : 'justify-center px-0'
-                )}>
-                    {isExpanded && (
-                        <a href="/dashboard" className="flex items-center gap-2" onClick={handleClick}>
-                            <img src={gciLogo} alt="GCI" className="h-7 w-auto" />
-                        </a>
-                    )}
-                    {!forceExpanded && (
-                        <button
-                            onClick={toggle}
-                            className={cn(
-                                'rounded-lg p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100',
-                                'dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors duration-150',
-                                !isExpanded && 'mx-auto'
-                            )}
-                            aria-label={isExpanded ? 'Recolher menu' : 'Expandir menu'}
-                        >
-                            {isExpanded
-                                ? <PanelLeftClose className="h-5 w-5" />
-                                : <PanelLeftOpen className="h-5 w-5" />
-                            }
-                        </button>
-                    )}
-                </div>
-
                 {/* ── Nav ── */}
                 <div className={cn(
                     'flex-1 overflow-y-auto overflow-x-hidden py-3',
