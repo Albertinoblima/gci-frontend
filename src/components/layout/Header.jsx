@@ -20,67 +20,70 @@ export default function Header() {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
     return (
-        <header className="flex h-[60px] shrink-0 items-center gap-3 border-b bg-white px-4 lg:px-6 dark:bg-slate-950 dark:border-slate-800 sticky top-0 z-30 shadow-sm">
+        <header className="flex h-[60px] shrink-0 items-center gap-4 px-4 lg:px-6 sticky top-0 z-30 bg-slate-900 border-b border-slate-800 shadow-md">
 
-
-            {/* ── Logo + nome — visível sempre ── */}
-            <NavLink to="/dashboard" className="flex items-center gap-2.5">
-                <img src={gciLogo} alt="GCI" className="h-7 w-auto" />
-                <span className="hidden sm:block text-sm font-semibold text-slate-700 dark:text-slate-200 tracking-tight">
-                    Sistema GCI
-                </span>
+            {/* ── Logo + nome — sempre visível ── */}
+            <NavLink to="/dashboard" className="flex items-center gap-3 shrink-0">
+                <img src={gciLogo} alt="GCI" className="h-8 w-auto brightness-0 invert" />
+                <div className="hidden sm:flex flex-col leading-tight">
+                    <span className="text-sm font-bold text-white tracking-tight">Sistema GCI</span>
+                    <span className="text-[10px] text-slate-400 font-normal tracking-wider uppercase">Gestão Cidadã Integrada</span>
+                </div>
             </NavLink>
+
+            {/* ── Separador ── */}
+            <div className="hidden md:block h-6 w-px bg-slate-700 mx-1" />
 
             {/* ── Espaço central ── */}
             <div className="flex-1" />
 
-            {/* ── Nome do usuário — visível em telas médias+ ── */}
+            {/* ── Nome do usuário ── */}
             <div className="hidden md:flex flex-col items-end mr-1">
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-200 leading-tight">
+                <span className="text-sm font-medium text-slate-100 leading-tight">
                     {user?.nome_completo || 'Usuário'}
                 </span>
-                <span className="text-[11px] text-slate-400 dark:text-slate-500 leading-tight">
+                <span className="text-[11px] text-slate-400 leading-tight">
                     {formatRole(user?.role)}
                 </span>
             </div>
 
-            {/* ── Avatar / menu do usuário ── */}
+            {/* ── Avatar / menu ── */}
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" size="icon" className="rounded-full h-8 w-8 shrink-0">
+                    <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 shrink-0 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700">
                         <CircleUser className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="dark:bg-slate-900 dark:border-slate-800 min-w-48">
+                <DropdownMenuContent align="end" className="bg-slate-900 border-slate-700 min-w-48">
                     <DropdownMenuLabel>
-                        <p className="font-semibold truncate">{user?.nome_completo || 'Nome do Usuário'}</p>
-                        <p className="text-xs text-slate-500 font-normal">{formatRole(user?.role)}</p>
+                        <p className="font-semibold truncate text-white">{user?.nome_completo || 'Nome do Usuário'}</p>
+                        <p className="text-xs text-slate-400 font-normal">{formatRole(user?.role)}</p>
                     </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuSeparator className="bg-slate-700" />
+                    <DropdownMenuItem asChild className="text-slate-300 focus:bg-slate-800 focus:text-white">
                         <NavLink to="/configuracoes">
                             <Settings className="mr-2 h-4 w-4" /><span>Configurações</span>
                         </NavLink>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="bg-slate-700" />
                     <DropdownMenuItem
                         onClick={logout}
-                        className="text-red-500 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-900/50 dark:focus:text-red-400"
+                        className="text-red-400 focus:bg-red-950 focus:text-red-400"
                     >
                         <LogOut className="mr-2 h-4 w-4" /><span>Sair</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* ── Hambúrguer — apenas mobile ── */}
+            {/* ── Hambúrguer mobile ── */}
             <div className="md:hidden">
                 <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                     <SheetTrigger asChild>
-                        <Button variant="outline" size="icon" className="h-8 w-8 shrink-0">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-slate-300 hover:text-white hover:bg-slate-700">
                             <Menu className="h-4 w-4" />
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="flex flex-col p-0 w-64 dark:bg-slate-950 dark:border-r-slate-800">
+                    <SheetContent side="left" className="flex flex-col p-0 w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800">
                         <Sidebar onLinkClick={() => setIsSheetOpen(false)} forceExpanded={true} />
                     </SheetContent>
                 </Sheet>
