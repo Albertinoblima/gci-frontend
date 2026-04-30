@@ -3,26 +3,37 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
+import { cn } from '@/lib/utils';
 
-export default function AppLayout() {
+function LayoutInner() {
+    const { collapsed } = useSidebar();
+
     return (
-        // Layout principal com grid. A sidebar some em telas pequenas ('hidden').
-        // 'md:grid' ativa o layout de duas colunas em telas médias e maiores.
-        <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-
-            {/* Sidebar Fixa para Desktop */}
-            <div className="hidden border-r bg-slate-50 dark:bg-slate-950 dark:border-slate-800 md:block">
+        <div className="flex min-h-screen w-full bg-slate-50 dark:bg-slate-900">
+            {/* Sidebar fixa desktop */}
+            <div className={cn(
+                'hidden md:flex shrink-0 transition-all duration-300 ease-in-out',
+                collapsed ? 'w-[60px]' : 'w-64'
+            )}>
                 <Sidebar />
             </div>
 
-            {/* Conteúdo Principal (Header + Página Atual) */}
-            <div className="flex flex-col">
+            {/* Conteúdo principal */}
+            <div className="flex flex-col flex-1 min-w-0">
                 <Header />
-                <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-slate-50 dark:bg-slate-900 overflow-y-auto">
-                    {/* O React Router renderizará o componente da página aqui */}
+                <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 overflow-y-auto">
                     <Outlet />
                 </main>
             </div>
         </div>
+    );
+}
+
+export default function AppLayout() {
+    return (
+        <SidebarProvider>
+            <LayoutInner />
+        </SidebarProvider>
     );
 }

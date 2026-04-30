@@ -31,8 +31,8 @@ export default function Header() {
                             <Menu className="h-5 w-5" />
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="flex flex-col p-0 dark:bg-slate-950 dark:border-r-slate-800">
-                        <Sidebar onLinkClick={() => setIsSheetOpen(false)} />
+                    <SheetContent side="left" className="flex flex-col p-0 w-64 dark:bg-slate-950 dark:border-r-slate-800">
+                        <Sidebar onLinkClick={() => setIsSheetOpen(false)} forceExpanded={true} />
                     </SheetContent>
                 </Sheet>
             </div>
