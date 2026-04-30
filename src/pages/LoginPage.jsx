@@ -10,7 +10,7 @@ import { Loader2, LogIn } from 'lucide-react';
 
 // CORREÇÃO: Importe sua logo a partir da pasta de assets.
 // O Vite irá processar essa imagem e fornecer o caminho correto.
-import gciLogo from '@/assets/logo-gci-completo.svg'; // <-- SUBSTITUA PELO NOME DO SEU ARQUIVO
+import gciLogo from '@/assets/logo-gci-completo.png';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
