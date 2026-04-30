@@ -24,7 +24,7 @@ export default function Header() {
 
             {/* ── Logo + nome — sempre visível ── */}
             <NavLink to="/dashboard" className="flex items-center gap-3 shrink-0">
-                <img src={gciLogo} alt="GCI" className="h-8 w-auto brightness-0 invert" />
+                <img src={gciLogo} alt="GCI" className="h-8 w-auto" />
                 <div className="hidden sm:flex flex-col leading-tight">
                     <span className="text-sm font-bold text-white tracking-tight">Sistema GCI</span>
                     <span className="text-[10px] text-slate-400 font-normal tracking-wider uppercase">Gestão Cidadã Integrada</span>
