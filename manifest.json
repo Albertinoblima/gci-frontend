@@ -1,0 +1,26 @@
+{
+    "short_name": "Painel GCI",
+    "name": "Painel GCI - Gestão de Cidades Inteligentes",
+    "description": "Painel Administrativo do Sistema de Gestão de Cidades Inteligentes (GCI) para otimizar a comunicação e serviços municipais.",
+    "icons": [
+        {
+            "src": "Logo-sem-fundo.ico",
+            "type": "image/x-icon",
+            "sizes": "16x16 32x32 48x48",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "favicon.ico",
+            "type": "image/x-icon",
+            "sizes": "16x16 32x32 48x48",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#0284c7",
+    "background_color": "#ffffff",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false
+}
